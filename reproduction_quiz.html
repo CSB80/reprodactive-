@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מסע למידה: רבייה זוויגית וא-זוויגית</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and general layout */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            padding: 2rem;
+            text-align: center;
+            direction: rtl; /* Right-to-left for Hebrew */
+        }
+        h1, h2 {
+            color: #2c3e50; /* Darker blue for headings */
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #34495e; /* Medium blue-gray for text */
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        .button {
+            background-color: #3498db; /* Blue button */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded buttons */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-weight: bold;
+            display: inline-block;
+            margin: 0.5rem;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+            transform: translateY(-2px);
+        }
+        .button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .button:disabled {
+            background-color: #a0aec0; /* Gray out disabled buttons */
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .feedback {
+            background-color: #ecf0f1; /* Light gray for feedback */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: #2c3e50;
+            border-right: 4px solid #3498db; /* Blue border on the right */
+            text-align: right;
+        }
+        .hidden {
+            display: none;
+        }
+        .choices-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .summary-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+            text-align: right; /* Align text to the right for the list */
+        }
+        .summary-list li {
+            margin-bottom: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Align content to the right */
+            text-align: right; /* Ensure text within list item is also right-aligned */
+        }
+        .summary-list li.advantage {
+            border-right: 6px solid #27ae60; /* Thicker green for advantages */
+            background-color: #e6f7ee; /* Lighter green background */
+        }
+        .summary-list li.disadvantage {
+            border-right: 6px solid #e74c3c; /* Thicker red for disadvantages */
+            background-color: #fcebeb; /* Lighter red background */
+        }
+        .summary-list li::before {
+            content: '•';
+            color: #34495e;
+            font-weight: bold;
+            margin-left: 0.5rem; /* Space before bullet */
+        }
+        /* Loading spinner styles */
+        .loader {
+            border: 4px solid #f3f3f3; /* Light grey */
+            border-top: 4px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .button {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+            .choices-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="flowchart-container">
+        <div id="intro-step">
+            <h1 class="text-3xl font-extrabold mb-4">מסע למידה אינטראקטיבי: רבייה זוויגית וא-זוויגית</h1>
+            <p class="text-lg mb-6">בואו נחקור את היתרונות והחסרונות של שתי דרכי הרבייה העיקריות בטבע באמצעות מקרים שונים.</p>
+            <button class="button" onclick="startFlowchart()">התחל</button>
+        </div>
+
+        <div id="definitions-step" class="hidden">
+            <h2 class="text-2xl font-bold mb-4">הגדרות יסוד</h2>
+            <div class="text-right mb-6">
+                <h3 class="text-xl font-semibold mb-2">מהו זוויג?</h3>
+                <p>זוויג (באנגלית: Sex) הוא מונח במדעי החיים המתאר את סיווגו של אורגניזם (למשל בעל חיים או צמח), כנקבי או זכרי.</p>
+                <h3 class="text-xl font-semibold mt-4 mb-2">רבייה זוויגית (Sexual Reproduction)</h3>
+                <p>רבייה שבה מעורבים שני הורים, ובה מועבר חלק מהחומר התורשתי מכל הורה אל הצאצאים. הצאצאים דומים לכל אחד מההורים אך אינם זהים בתכונותיהם ויש להם שילוב ייחודי של תכונות משלהם. לכן יש גיוון גנטי בקרב הצאצאים.</p>
+                <h3 class="text-xl font-semibold mt-4 mb-2">רבייה א-זוויגית (Asexual Reproduction)</h3>
+                <p>רבייה שבה מעורב הורה אחד, ובה מועבר כל החומר התורשתי מהורה זה לצאצאיו. הצאצאים זהים בתכונותיהם להורה וגם זה לזה בדיוק.</p>
+            </div>
+            <button class="button" onclick="startQuestions()">המשך</button>
+        </div>
+
+        <div id="question-step" class="hidden">
+            <h2 class="text-2xl font-bold mb-4" id="question-title"></h2>
+            <p class="text-lg mb-6" id="question-text"></p>
+            <div class="choices-container">
+                <button class="button" id="sexual-choice" onclick="handleChoice('sexual')">רבייה זוויגית</button>
+                <button class="button" id="asexual-choice" onclick="handleChoice('asexual')">רבייה א-זוויגית</button>
+            </div>
+            <div id="feedback-area" class="feedback hidden"></div>
+            <div class="flex flex-wrap justify-center gap-4 mt-4">
+                <button class="button bg-gray-500 hover:bg-gray-600 hidden" id="prev-question-button" onclick="goToPreviousQuestion()">חזור לשאלה הקודמת</button>
+                <button class="button bg-blue-500 hover:bg-blue-600" id="repeat-question-button" onclick="repeatCurrentQuestion()">חזור על שאלה זו</button>
+                <button class="button mt-4 bg-green-600 hover:bg-green-700 hidden" id="next-question-button" onclick="goToNextQuestion()">השאלה הבאה</button>
+            </div>
+        </div>
+
+        <div id="summary-step" class="hidden">
+            <h2 class="text-2xl font-bold mb-4">סיכום: יתרונות וחסרונות</h2>
+            <div class="text-right mb-6">
+                <h3 class="text-xl font-semibold mb-2">רבייה זוויגית</h3>
+                <ul class="summary-list">
+                    <li class="advantage">גיוון גנטי: מאפשר הסתגלות מהירה יותר לשינויים סביבתיים ומחלות.</li>
+                    <li class="advantage">עמידות למחלות: קשה יותר למחלה אחת להשמיד אוכלוסייה שלמה.</li>
+                    <li class="disadvantage">צורך בבן זוג: עלול להיות קשה למצוא בן זוג, במיוחד באוכלוסיות קטנות.</li>
+                    <li class="disadvantage">תהליך איטי: דורש יותר זמן ואנרגיה ליצירת צאצאים.</li>
+                    <li class="disadvantage">סיכון לכישלון: תהליך ההזדווגות וההפריה לא תמיד מצליחים.</li>
+                </ul>
+                <h3 class="text-xl font-semibold mt-6 mb-2">רבייה א-זוויגית</h3>
+                <ul class="summary-list">
+                    <li class="advantage">מהירה ויעילה: מאפשרת ייצור מהיר של צאצאים רבים.</li>
+                    <li class="advantage">אין צורך בבן זוג: אורגניזם יחיד יכול להתרבות.</li>
+                    <li class="advantage">דורשת פחות אנרגיה: פשוטה יותר מבחינה אנרגטית.</li>
+                    <li class="disadvantage">אין גיוון גנטי: הצאצאים זהים גנטית, מה שמגביר פגיעות למחלות ושינויים סביבתיים.</li>
+                    <li class="disadvantage">סיכון גבוה להכחדה: שינוי סביבתי קטן או מחלה אחת יכולים להשמיד אוכלוסייה שלמה.</li>
+                </ul>
+            </div>
+            <p class="text-lg">תודה שלמדת איתנו על רבייה זוויגית וא-זוויגית!</p>
+            <button class="button mt-4" onclick="restartFlowchart()">התחל מחדש</button>
+            <button class="button mt-4 bg-purple-600 hover:bg-purple-700" onclick="generateNewCase()">צור מקרה חדש עם ✨Gemini</button>
+            <div id="loading-spinner" class="loader hidden"></div>
+            <div id="gemini-error" class="feedback hidden" style="border-right: 4px solid #e74c3c;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Define the steps of the flowchart
+        const steps = [
+            'intro-step',
+            'definitions-step',
+            'question-step',
+            'summary-step'
+        ];
+        let currentStepIndex = 0;
+        let currentQuestionIndex = 0;
+
+        // Questions and their feedback
+        const questions = [
+            {
+                title: "מקרה 1: חיידקים בצלחת פטרי",
+                text: "דמיינו מושבת חיידקים בצלחת פטרי עם שפע של מזון ותנאים יציבים. המטרה היא למלא את הצלחת בחיידקים כמה שיותר מהר. איזו דרך רבייה עדיפה במצב זה?",
+                correctChoice: "asexual",
+                feedback: {
+                    asexual: "נכון! רבייה א-זוויגית מאפשרת לחיידקים לשכפל את עצמם במהירות עצומה, למלא את הצלחת ולנצל את המשאבים הזמינים ביעילות מקסימלית. זהו יתרון מובהק של רבייה א-זוויגית: מהירות ויעילות.",
+                    sexual: "לא בדיוק. רבייה זוויגית הייתה דורשת מהחיידקים למצוא בן זוג ולהחליף חומר גנטי, מה שהיה מאט משמעותית את קצב הגידול. במצב של שפע וסביבה יציבה, מהירות היא המפתח. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 2: עץ פרי חדשני",
+                text: "מדענים פיתחו זן חדש של עץ פרי עם פירות גדולים ומתוקים במיוחד. הם רוצים להפיץ את הזן הזה במהירות ולוודא שכל העצים החדשים יהיו זהים לחלוטין לעץ המקורי, כדי לשמר את התכונות הרצויות. איזו דרך רבייה תבטיח זאת?",
+                correctChoice: "asexual",
+                feedback: {
+                    asexual: "נכון! רבייה א-זוויגית (למשל, באמצעות ייחורים או הרכבה) תבטיח שכל העצים החדשים יהיו זהים גנטית לעץ האם, וישמרו על כל התכונות הרצויות. זהו יתרון נוסף של רבייה א-זוויגית: שימור תכונות רצויות וייצור המוני של צאצאים זהים.",
+                    sexual: "לא בדיוק. רבייה זוויגית (מזרעים) הייתה מביאה לגיוון גנטי בקרב הצאצאים, וייתכן שהעצים החדשים לא היו זהים לחלוטין לעץ המקורי ולא היו שומרים על כל התכונות הרצויות. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 3: אוכלוסיית ארנבים מול מחלה חדשה",
+                text: "אוכלוסיית ארנבים גדולה חיה באזור מסוים. לפתע, מתפרצת מחלה חדשה וקטלנית שמאיימת להשמיד את כל הארנבים. איזו דרך רבייה תגדיל את הסיכוי של האוכלוסייה לשרוד את המגפה?",
+                correctChoice: "sexual",
+                feedback: {
+                    sexual: "נכון! רבייה זוויגית יוצרת גיוון גנטי בקרב הצאצאים. המשמעות היא שחלק מהארנבים עשויים להיות בעלי עמידות גנטית למחלה החדשה, ובכך להבטיח את המשך קיום המין. זהו יתרון קריטי של רבייה זוויגית: גיוון גנטי והסתגלות לסביבה משתנה.",
+                    asexual: "לא בדיוק. אם כל הארנבים היו זהים גנטית (כמו ברבייה א-זוויגית), סביר להניח שהמחלה הייתה משמידה את כולם, מכיוון שלאף אחד מהם לא הייתה עמידות גנטית טבעית. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 4: דפניה באגם משתנה",
+                text: "דפניה היא סרטן זעיר החי במים מתוקים, ויכולה להתרבות הן ברבייה זוויגית והן ברבייה א-זוויגית. באגם שבו הדפניות חיות, יש שינויים קיצוניים בטמפרטורה, בחומציות ובזמינות המזון לאורך השנה. איזו דרך רבייה תהיה חיונית להישרדות הדפניות בתנאים אלו?",
+                correctChoice: "sexual",
+                feedback: {
+                    sexual: "נכון! בתנאים משתנים וקשים, רבייה זוויגית מאפשרת לדפניות לייצר צאצאים בעלי גיוון גנטי רב יותר. גיוון זה מגדיל את הסיכוי שחלק מהצאצאים יהיו עמידים לשינויים הסביבתיים וישרדו, ובכך יבטיחו את המשך המין. זה מדגיש את יתרון הגיוון הגנטי ברבייה זוויגית.",
+                    asexual: "לא בדיוק. רבייה א-זוויגית הייתה מייצרת צאצאים זהים גנטית, ובתנאים סביבתיים קיצוניים ומשתנים, אם ההורה לא עמיד לתנאי הסביבה המשתנים, גם כל הצאצאים לא יהיו עמידים, מה שעלול להוביל להכחדה מהירה של האוכלוסייה. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 5: דשא מתפשט בגינה",
+                text: "אתם רוצים למלא שטח גדול בגינה שלכם בדשא ירוק וצפוף במהירות. הדשא יכול להתרבות גם באמצעות פרחים וזרעים (רבייה זוויגית) וגם באמצעות שלוחות תת-קרקעיות (רבייה א-זוויגית). איזו דרך רבייה תעזור לכם להשיג את המטרה במהירות וביעילות?",
+                correctChoice: "asexual",
+                feedback: {
+                    asexual: "נכון! שלוחות תת-קרקעיות (רבייה וגטטיבית, שהיא סוג של רבייה א-זוויגית) מאפשרות לדשא להתפשט במהירות רבה ולכסות שטח גדול בפרטים זהים גנטית להורה. זוהי דרך יעילה מאוד להתרבות ולהתבסס בסביבה יציבה. זה מדגיש את יתרון המהירות והיעילות של רבייה א-זוויגית בהתפשטות.",
+                    sexual: "לא בדיוק. רבייה מזרעים (רבייה זוויגית) הייתה תהליך איטי יותר, וייתכן שהזרעים לא היו נובטים באופן אחיד או שהיו מייצרים צמחים עם גיוון גנטי שלא היה אופטימלי למילוי מהיר של השטח. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 6: אמבה בסביבה אידיאלית",
+                text: "אמבה בודדת מוצאת את עצמה בסביבה מימית עשירה במזון ונטולת טורפים. היא רוצה להתרבות במהירות כדי לנצל את התנאים האופטימליים. איזו דרך רבייה תאפשר לה להגדיל את אוכלוסייתה באופן היעיל ביותר?",
+                correctChoice: "asexual",
+                feedback: {
+                    asexual: "נכון! רבייה א-זוויגית, באמצעות חלוקה פשוטה, מאפשרת לאמבה לשכפל את עצמה במהירות עצומה ולנצל את המשאבים הזמינים ביעילות מקסימלית. אין צורך למצוא בן זוג או להשקיע אנרגיה בתהליכי חיזור והפריה, מה שהופך אותה לדרך הרבייה היעילה ביותר בתנאים אידיאליים.",
+                    sexual: "לא בדיוק. רבייה זוויגית הייתה דורשת תהליכים מורכבים יותר, כמו מציאת בן זוג (אם היה אפשרי לאמבה) והחלפת חומר גנטי, מה שהיה מאט משמעותית את קצב הגידול. בתנאים אופטימליים, מהירות ויעילות הן המפתח. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 7: יונק בסביבה מורכבת",
+                text: "יונקים, כמו בני אדם, מתרבים באופן בלעדי ברבייה זוויגית. בהתחשב בסביבה המורכבת והמשתנה שבה הם חיים ובאורך חייהם, איזו דרך רבייה מספקת להם את היתרונות החשובים ביותר להישרדות לטווח ארוך?",
+                correctChoice: "sexual",
+                feedback: {
+                    sexual: "נכון! רבייה זוויגית חיונית ליונקים מכיוון שהיא יוצרת גיוון גנטי רב בצאצאים. גיוון זה מאפשר לאוכלוסייה להסתגל לשינויים סביבתיים, להתמודד עם מחלות חדשות ולשפר את סיכויי ההישרדות לטווח הארוך. למרות שהתהליך איטי ודורש אנרגיה רבה, היתרונות של הגיוון הגנטי עולים על החסרונות עבור יונקים בעלי מחזור חיים ארוך והשקעה הורית גבוהה.",
+                    asexual: "לא בדיוק. רבייה א-זוויגית תייצר צאצאים זהים גנטית. עבור יונקים, שחיים בסביבות מורכבות ומשתנות, חוסר הגיוון הגנטי היה הופך אותם לפגיעים ביותר למחלות ושינויים סביבתיים, ומסכן את הישרדות המין. נסו שוב!"
+                }
+            },
+            {
+                title: "מקרה 8: השקעת אנרגיה ברבייה",
+                text: "דמיינו תהליך רבייה. איזה סוג רבייה, זוויגית או א-זוויגית, דורש בדרך כלל השקעת אנרגיה רבה יותר מהאורגניזם המתרבה?",
+                correctChoice: "sexual",
+                feedback: {
+                    sexual: "נכון! רבייה זוויגית דורשת השקעת אנרגיה רבה יותר. היא כוללת תהליכים כמו יצירת תאי מין (גמטות), מציאת בן זוג (האבקה בפרחים), חיזור, והפריה. כל אלה צורכים משאבים רבים. למרות זאת, היא משתלמת בזכות הגיוון הגנטי שהיא מספקת.",
+                    asexual: "לא בדיוק. רבייה א-זוויגית היא לרוב פחות עתירת אנרגיה. היא אינה דורשת מציאת בן זוג או יצירת גמטות, והתהליך פשוט ומהיר יותר. נסו שוב!"
+                }
+            }
+        ];
+
+        // Function to show a specific step and hide others
+        function showStep(stepId) {
+            steps.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(stepId).classList.remove('hidden');
+        }
+
+        // Initialize the flowchart
+        function startFlowchart() {
+            currentStepIndex = 1; // Start with definitions
+            showStep(steps[currentStepIndex]);
+        }
+
+        // Starts the questions section
+        function startQuestions() {
+            currentStepIndex = 2; // Move to question-step
+            currentQuestionIndex = 0; // Start from the first question
+            showStep(steps[currentStepIndex]);
+            loadQuestion();
+        }
+
+        // Advances to the next question
+        function goToNextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                currentStepIndex = 3; // All questions answered, move to summary
+                showStep(steps[currentStepIndex]);
+            }
+        }
+
+        // Goes back to the previous question
+        function goToPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                loadQuestion();
+            }
+        }
+
+        // Repeats the current question
+        function repeatCurrentQuestion() {
+            loadQuestion();
+        }
+
+        // Load a question into the question-step
+        function loadQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('question-title').innerText = question.title;
+            document.getElementById('question-text').innerText = question.text;
+            // Removed image loading as per user request
+            // document.getElementById('question-image').src = question.imageUrl;
+            // document.getElementById('question-image').alt = `איור של ${question.title}`; // Dynamic alt text
+
+            document.getElementById('feedback-area').classList.add('hidden');
+            document.getElementById('next-question-button').classList.add('hidden');
+            
+            // Re-enable buttons and remove disabled styles for the new question
+            document.getElementById('sexual-choice').disabled = false;
+            document.getElementById('asexual-choice').disabled = false;
+            document.getElementById('sexual-choice').classList.remove('opacity-50', 'cursor-not-allowed');
+            document.getElementById('asexual-choice').classList.remove('opacity-50', 'cursor-not-allowed');
+
+            // Manage visibility of "Previous Question" button
+            if (currentQuestionIndex > 0) {
+                document.getElementById('prev-question-button').classList.remove('hidden');
+            } else {
+                document.getElementById('prev-question-button').classList.add('hidden');
+            }
+        }
+
+        // Handle user's choice for a question
+        function handleChoice(choice) {
+            const question = questions[currentQuestionIndex];
+            const feedbackArea = document.getElementById('feedback-area');
+            feedbackArea.classList.remove('hidden');
+
+            if (choice === question.correctChoice) {
+                feedbackArea.innerHTML = `<p class="font-bold text-green-700">תשובה נכונה!</p><p>${question.feedback[choice]}</p>`;
+                feedbackArea.style.borderColor = '#27ae60'; // Green border for correct
+
+                // Disable buttons and show next question button only on correct answer
+                document.getElementById('sexual-choice').disabled = true;
+                document.getElementById('asexual-choice').disabled = true;
+                document.getElementById('sexual-choice').classList.add('opacity-50', 'cursor-not-allowed');
+                document.getElementById('asexual-choice').classList.add('opacity-50', 'cursor-not-allowed');
+                document.getElementById('next-question-button').classList.remove('hidden');
+            } else {
+                feedbackArea.innerHTML = `<p class="font-bold text-red-700">תשובה שגויה.</p><p>${question.feedback[choice]}</p>`;
+                feedbackArea.style.borderColor = '#e74c3c'; // Red border for incorrect
+                // Keep buttons enabled to allow retrying
+                document.getElementById('sexual-choice').disabled = false;
+                document.getElementById('asexual-choice').disabled = false;
+                document.getElementById('sexual-choice').classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('asexual-choice').classList.remove('opacity-50', 'cursor-not-allowed');
+                document.getElementById('next-question-button').classList.add('hidden'); // Hide until correct answer is chosen
+            }
+        }
+
+        // Restart the flowchart from the beginning
+        function restartFlowchart() {
+            currentStepIndex = 0;
+            currentQuestionIndex = 0;
+            showStep(steps[currentStepIndex]);
+        }
+
+        // --- Gemini API Integration ---
+        async function generateNewCase() {
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const geminiErrorDiv = document.getElementById('gemini-error');
+            const generateButton = document.querySelector('.bg-purple-600');
+
+            loadingSpinner.classList.remove('hidden');
+            geminiErrorDiv.classList.add('hidden');
+            generateButton.disabled = true; // Disable button while loading
+
+            const prompt = `Generate a new case study for an interactive quiz about sexual vs. asexual reproduction. The case study should describe a scenario involving an organism and its reproductive strategy. The response must be in Hebrew and formatted as a JSON object with the following structure:
+{
+    "title": "מקרה חדש: [כותרת קצרה]",
+    "text": "[תיאור המקרה והשאלה איזו דרך רבייה עדיפה]",
+    "correctChoice": "[sexual or asexual]",
+    "feedback": {
+        "sexual": "[הסבר מדוע רבייה זוויגית נכונה/לא נכונה במקרה זה]",
+        "asexual": "[הסבר מדוע רבייה א-זוויגית נכונה/לא נכונה במקרה זה]"
+    }
+}
+Ensure the case highlights a specific advantage or disadvantage of one reproduction type over the other. The case should be distinct from: חיידקים בצלחת פטרי, עץ פרי חדשני, אוכלוסיית ארנבים מול מחלה חדשה, דפניה באגם משתנה, דשא מתפשט בגינה, אמבה בסביבה אידיאלית, יונק בסביבה מורכבת, השקעת אנרגיה ברבייה.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            
+            const payload = {
+                contents: chatHistory,
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "title": { "type": "STRING" },
+                            "text": { "type": "STRING" },
+                            "correctChoice": { "type": "STRING", "enum": ["sexual", "asexual"] },
+                            "feedback": {
+                                "type": "OBJECT",
+                                "properties": {
+                                    "sexual": { "type": "STRING" },
+                                    "asexual": { "type": "STRING" }
+                                },
+                                "required": ["sexual", "asexual"]
+                            }
+                        },
+                        "required": ["title", "text", "correctChoice", "feedback"]
+                    }
+                }
+            };
+
+            const apiKey = ""; // Canvas will automatically provide it in runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} - ${errorData.error.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const jsonString = result.candidates[0].content.parts[0].text;
+                    const newQuestion = JSON.parse(jsonString);
+
+                    // Add the new question to the questions array
+                    questions.push(newQuestion);
+                    currentQuestionIndex = questions.length - 1; // Set index to the new question
+                    
+                    currentStepIndex = 2; // Go to question step
+                    showStep(steps[currentStepIndex]);
+                    loadQuestion();
+
+                } else {
+                    throw new Error("Invalid response structure from Gemini API.");
+                }
+            } catch (error) {
+                console.error("Error generating new case:", error);
+                geminiErrorDiv.classList.remove('hidden');
+                geminiErrorDiv.innerHTML = `<p class="font-bold text-red-700">אירעה שגיאה ביצירת מקרה חדש:</p><p>${error.message}</p><p>אנא נסה שוב מאוחר יותר.</p>`;
+            } finally {
+                loadingSpinner.classList.add('hidden');
+                generateButton.disabled = false; // Re-enable button
+            }
+        }
+
+        // Initial display when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            showStep('intro-step');
+        });
+    </script>
+</body>
+</html>
